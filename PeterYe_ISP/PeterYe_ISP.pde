@@ -4,6 +4,7 @@ PFont game_font;
 int screenID=1;
 
 int helicopterX=0,helicopterY=200;
+int gangX=300,gangY=200;
 
 void loadingBar()
 {
@@ -28,9 +29,8 @@ void loadingBar()
   if(loadingBarLength>loadingBarMaxLength) ++screenID;
 }
 
-void introAnimation()
+void drawHelicoptor()
 {
-  background(150);
   stroke(80);
   strokeWeight(20);
   line(helicopterX,helicopterY-50,helicopterX,helicopterY-100);
@@ -48,12 +48,27 @@ void introAnimation()
   fill(#117C2E);
   rect(helicopterX-200,helicopterY-20,200,20);
   ellipse(helicopterX,helicopterY,200,100);
+  ellipse(helicopterX-200,helicopterY-20,30,80);
   fill(80);
   ellipse(helicopterX,helicopterY-100,20,20);
   fill(#20C9B9);
   rect(helicopterX-50,helicopterY-20,100,40);
-  if(helicopterX<300) ++helicopterX;
+}
+
+void drawGang()
+{
   
+}
+
+void introAnimation()
+{
+  background(150);
+  drawHelicoptor();
+  if(helicopterX<300) ++helicopterX;
+  else
+  {
+    drawGang();
+  }
 }
 
 void setup()
