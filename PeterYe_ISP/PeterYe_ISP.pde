@@ -4,7 +4,9 @@ PFont game_font;
 int screenID=1;
 
 int helicopterX=0,helicopterY=200;
-int gangX=300,gangY=200;
+float gangX1=300,gangY1=200;
+float gangX2=300,gangY2=200;
+float characterX=300,characterY=370;
 
 void loadingBar()
 {
@@ -55,19 +57,58 @@ void drawHelicoptor()
   rect(helicopterX-50,helicopterY-20,100,40);
 }
 
-void drawGang()
+void drawGang(float gangX,float gangY)
 {
-  
+  fill(0);
+  strokeWeight(1);
+  ellipse(gangX,gangY,30,30);
+  strokeWeight(8);
+  line(gangX,gangY,gangX,gangY+50);
+  line(gangX,gangY+30,gangX-20,gangY+10);
+  line(gangX,gangY+30,gangX+20,gangY+10);
+  line(gangX,gangY+50,gangX-20,gangY+70);
+  line(gangX,gangY+50,gangX+20,gangY+70);
+}
+
+void drawCharacter()
+{
+  strokeWeight(8);
+  line(characterX,characterY,characterX,characterY+50);
+  line(characterX,characterY+30,characterX-20,characterY+10);
+  line(characterX,characterY+30,characterX+20,characterY+10);
+  line(characterX,characterY+50,characterX-20,characterY+70);
+  line(characterX,characterY+50,characterX+20,characterY+70);
+  fill(#CBA779);
+  strokeWeight(1);
+  ellipse(characterX,characterY,30,30);
+  fill(#EA8911);
+  arc(characterX,characterY,40,40,PI,2*PI,CHORD);
 }
 
 void introAnimation()
 {
   background(150);
   drawHelicoptor();
+  fill(#79C9CB);
+  rect(0,400,800,100);
+  drawCharacter();
   if(helicopterX<300) ++helicopterX;
   else
   {
-    drawGang();
+    drawGang(gangX1,gangY1);
+    drawGang(gangX2,gangY2);
+    fill(#814C0C);
+    strokeWeight(1);
+    rect(gangX1+20,gangY1+5,30,8);
+    fill(#0C3981);
+    rect(gangX2-20,gangY2+15,40,-50);
+    if(gangY1<=370)
+    {
+      gangX1-=0.5;
+      gangX2+=0.5;
+      ++gangY1;
+      ++gangY2;
+    }
   }
 }
 
