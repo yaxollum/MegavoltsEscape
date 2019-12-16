@@ -1,7 +1,9 @@
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID;
+int screenID=1;
+
+int helicopterX=0,helicopterY=200;
 
 void loadingBar()
 {
@@ -28,16 +30,36 @@ void loadingBar()
 
 void introAnimation()
 {
-  background(100);
-  fill(#ED9D1D);
-  ellipse(300,300,400,300);
+  background(150);
+  stroke(80);
+  strokeWeight(20);
+  line(helicopterX,helicopterY-50,helicopterX,helicopterY-100);
+  stroke(#DBCA2A);
+  line(helicopterX-150,helicopterY-100,helicopterX+150,helicopterY-100);
+  stroke(#D3C011);
+  line(helicopterX-100,helicopterY-50,helicopterX+100,helicopterY-150);
+  stroke(50);
+  strokeWeight(15);
+  line(helicopterX-50,helicopterY,helicopterX-50,helicopterY+70);
+  line(helicopterX+50,helicopterY,helicopterX+50,helicopterY+70);
+  line(helicopterX-120,helicopterY+70,helicopterX+120,helicopterY+70);
+  stroke(0);
+  strokeWeight(1);
+  fill(#117C2E);
+  rect(helicopterX-200,helicopterY-20,200,20);
+  ellipse(helicopterX,helicopterY,200,100);
+  fill(80);
+  ellipse(helicopterX,helicopterY-100,20,20);
+  fill(#20C9B9);
+  rect(helicopterX-50,helicopterY-20,100,40);
+  if(helicopterX<300) ++helicopterX;
+  
 }
 
 void setup()
 {
   size(800,500);
   game_font=loadFont("game_font.vlw");
-  screenID=0;
 }
 
 void draw()
