@@ -1,12 +1,14 @@
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=1;
+int screenID=0;
 
+int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
 float gangX1=300,gangY1=200;
 float gangX2=300,gangY2=200;
-float characterX=300,characterY=370;
+float characterX=310,characterY=370;
+float bagAngle=0;
 
 void loadingBar()
 {
@@ -31,7 +33,17 @@ void loadingBar()
   if(loadingBarLength>loadingBarMaxLength) ++screenID;
 }
 
-void drawHelicoptor()
+void introTime()
+{
+  background(50);
+  textFont(game_font,50);
+  fill(#EDE83E);
+  text("One Week Ago ...",180,200);
+  ++introTimeDisplay;
+  if(introTimeDisplay>=180) ++screenID;
+}
+
+void drawHelicopter()
 {
   stroke(80);
   strokeWeight(20);
@@ -85,10 +97,20 @@ void drawCharacter()
   arc(characterX,characterY,40,40,PI,2*PI,CHORD);
 }
 
-void introAnimation()
+void drawBag()
+{
+  fill(#0C3981);
+  strokeWeight(1);
+  quad(gangX2-20,gangY2+15,
+    gangX2-20+cos(bagAngle)*40,gangY2+15-sin(bagAngle)*40,
+    gangX2-20+cos(bagAngle+atan(6/4))*sqrt(5200),gangY2+15-sin(bagAngle+atan(6/4))*sqrt(5200),
+    gangX2-20+cos(bagAngle+PI/2)*60,gangY2+15-sin(bagAngle+PI/2)*60);
+}
+
+void introAnimationPart1()
 {
   background(150);
-  drawHelicoptor();
+  drawHelicopter();
   fill(#79C9CB);
   rect(0,400,800,100);
   drawCharacter();
@@ -100,16 +122,31 @@ void introAnimation()
     fill(#814C0C);
     strokeWeight(1);
     rect(gangX1+20,gangY1+5,30,8);
-    fill(#0C3981);
-    rect(gangX2-20,gangY2+15,40,-50);
+    drawBag();
     if(gangY1<=370)
     {
-      gangX1-=0.5;
+      gangX1-=1;
       gangX2+=0.5;
       ++gangY1;
       ++gangY2;
     }
+    else
+    {
+      if(bagAngle<PI/2) bagAngle+=0.01;
+      else
+      {
+        gangX1+=1.2;
+        ++gangX2;
+        ++characterX;
+        if(gangX1>850) ++screenID;
+      }
+    }
   }
+}
+
+void introAnimationPart2()
+{
+  background(150);
 }
 
 void setup()
@@ -121,5 +158,7 @@ void setup()
 void draw()
 {
   if(screenID==0) loadingBar();
-  else if(screenID==1) introAnimation();
+  else if(screenID==1) introTime();
+  else if(screenID==2) introAnimationPart1();
+  else if(screenID==3) introAnimationPart2();
 }
