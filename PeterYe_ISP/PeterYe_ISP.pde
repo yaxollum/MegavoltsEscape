@@ -1,7 +1,7 @@
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=0;
+int screenID=2;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -107,6 +107,13 @@ void drawBag()
     gangX2-20+cos(bagAngle+PI/2)*60,gangY2+15-sin(bagAngle+PI/2)*60);
 }
 
+void drawStick()
+{
+  fill(#814C0C);
+  strokeWeight(1);
+  rect(gangX1+20,gangY1+5,30,8);
+}
+
 void introAnimationPart1()
 {
   background(150);
@@ -119,9 +126,7 @@ void introAnimationPart1()
   {
     drawGang(gangX1,gangY1);
     drawGang(gangX2,gangY2);
-    fill(#814C0C);
-    strokeWeight(1);
-    rect(gangX1+20,gangY1+5,30,8);
+    drawStick();
     drawBag();
     if(gangY1<=370)
     {
@@ -138,15 +143,65 @@ void introAnimationPart1()
         gangX1+=1.2;
         ++gangX2;
         ++characterX;
-        if(gangX1>850) ++screenID;
+        if(gangX1>850)
+        {
+          ++screenID;
+          gangX1-=800;
+          characterX-=800;
+          gangX2-=800;
+        }
       }
     }
   }
 }
 
+void drawBuildingLeft()
+{
+  fill(#9EB45D);
+  rect(400,450,300,-400);
+  fill(50);
+  rect(630,450,70,-150);
+  fill(#159BCE);
+  rect(450,250,100,70);
+  strokeWeight(10);
+  
+  
+}
+
+void drawBuildingRight()
+{
+  fill(#9EB45D);
+  rect(700,450,200,-400);
+  stroke(#9EB45D);
+  line(700,50,700,450);
+  stroke(0);
+}
+
+void drawBanner()
+{
+  fill(200);
+  rect(420,100,360,100);
+  fill(#DD0000);
+  textFont(game_font,60);
+  text("BASE 3923",440,180);
+}
+
 void introAnimationPart2()
 {
   background(150);
+  fill(#B45DB3);
+  rect(0,400,800,100);
+  drawBuildingLeft();
+  drawGang(gangX1,gangY1);
+  drawGang(gangX2,gangY2);
+  drawCharacter();
+  drawStick();
+  drawBag();
+  drawBuildingRight();
+  drawBanner();
+  ++gangX1;
+  ++gangX2;
+  ++characterX;
 }
 
 void setup()
