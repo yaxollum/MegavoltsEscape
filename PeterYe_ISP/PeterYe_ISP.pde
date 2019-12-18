@@ -1,7 +1,7 @@
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=0;
+int screenID=4;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -208,11 +208,59 @@ void introAnimationPart2()
   ++gangX1;
   ++gangX2;
   ++characterX;
+  
+  if(gangX1>=750) ++screenID;
 }
 
-void mazeOfLearning()
+void mainMenu()
 {
+  textFont(game_font,50);
+  background(150);
+  fill(#E0D144);
   
+  if(mouseX>=200&&mouseX<=600&&mouseY>=50&&mouseY<=130) fill(#EDE597);
+  rect(200,50,400,80);
+  fill(#E0D144);
+  
+  if(mouseX>=200&&mouseX<=600&&mouseY>=150&&mouseY<=230) fill(#EDE597);
+  rect(200,150,400,80);
+  fill(#E0D144);
+  
+  if(mouseX>=200&&mouseX<=600&&mouseY>=250&&mouseY<=330) fill(#EDE597);
+  rect(200,250,400,80);
+  fill(#E0D144);
+  
+  if(mouseX>=200&&mouseX<=600&&mouseY>=350&&mouseY<=430) fill(#EDE597);
+  rect(200,350,400,80);
+  fill(#E0D144);
+  
+  fill(50);
+  text("Instructions",240,110);
+  textFont(game_font,40);
+  text("Maze of Learning",230,200);
+  text("Game of Testing",230,300);
+  textFont(game_font,60);
+  text("Goodbye",280,410);
+}
+
+void mainMenuMouse()
+{
+  if(mouseX>=200&&mouseX<=600&&mouseY>=50&&mouseY<=130) ++screenID;
+}
+
+void instructions()
+{
+  fill(#64D126);
+  background(50);
+  textFont(game_font,25);
+  text("You are a master electrician named Megavolt."
+  +" You have been captured by a group of masked gang members"
+  +" and thrown into a secret base hidden in the heart of Toronto."
+  +" The gang has locked you up behind multiple layers of electrical security"
+  +" equipment. You must escape undiscovered -"
+  +" and not electrocuted, of course!\n\nControls\n"
+  +"---------------\nW to go up\n"
+  +"S to go down\nA to go left\nD to go right",50,50,700,400);
 }
 
 void setup()
@@ -227,5 +275,11 @@ void draw()
   else if(screenID==1) introTime();
   else if(screenID==2) introAnimationPart1();
   else if(screenID==3) introAnimationPart2();
-  else if(screenID==4) mazeOfLearning();
+  else if(screenID==4) mainMenu();
+  else if(screenID==5) instructions();
+}
+
+void mouseClicked()
+{
+  if(screenID==4) mainMenuMouse();
 }
