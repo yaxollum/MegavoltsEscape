@@ -1,7 +1,7 @@
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=2;
+int screenID=0;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -163,9 +163,15 @@ void drawBuildingLeft()
   rect(630,450,70,-150);
   fill(#159BCE);
   rect(450,250,100,70);
+  stroke(100);
   strokeWeight(10);
-  
-  
+  line(430,250,570,250);
+  line(430,320,570,320);
+  for(int x=440;x<=560;x+=20)
+  {
+    line(x,250,x,320);
+  }
+  stroke(0);
 }
 
 void drawBuildingRight()
@@ -204,6 +210,11 @@ void introAnimationPart2()
   ++characterX;
 }
 
+void mazeOfLearning()
+{
+  
+}
+
 void setup()
 {
   size(800,500);
@@ -216,4 +227,5 @@ void draw()
   else if(screenID==1) introTime();
   else if(screenID==2) introAnimationPart1();
   else if(screenID==3) introAnimationPart2();
+  else if(screenID==4) mazeOfLearning();
 }
