@@ -15,9 +15,31 @@ int helicopterX=0,helicopterY=200;
 float gangX1=300,gangY1=200;
 float gangX2=300,gangY2=200;
 float characterX=310,characterY=370;
+int mazeCharacterX=1,mazeCharacterY=0;
 float bagAngle=0;
 
 int exitWaves=0;
+
+int[][] mazeVerticalWalls={
+{1,1,1,1,1},
+{1,1,1,1,0},
+{0,1,1,1,1},
+{0,0,1,1,0},
+{0,0,1,1,1},
+{0,0,0,1,0},
+{0,0,1,1,0},
+{0,0,1,1,0},
+{1,1,1,1,1}
+};
+
+int[][] mazeHorizontalWalls={
+{1,1,1,1,1,1,1,1},
+{0,0,1,1,1,1,1,0},
+{0,0,0,1,1,1,1,0},
+{0,0,0,0,0,0,0,0},
+{0,0,0,0,1,0,0,0},
+{1,1,1,1,1,1,1,1}
+};
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -297,7 +319,85 @@ void instructionsMouse()
   if(mouseInBox(500,350,200,80)) --screenID; // go back to mainMenu
 }
 
-void mazeOfLearning() {}
+void drawMazeWalls()
+{
+  strokeWeight(10);
+  stroke(#8B4EE3);
+  for(int i=0;i<mazeVerticalWalls.length;++i)
+  {
+    for(int j=0;j<mazeVerticalWalls[i].length;++j)
+    {
+      if(mazeVerticalWalls[i][j]==1) line(i*100,j*100,i*100,j*100+100); // vertical walls
+    }
+  }
+  for(int i=0;i<mazeHorizontalWalls.length;++i)
+  {
+    for(int j=0;j<mazeHorizontalWalls[i].length;++j)
+    {
+      if(mazeHorizontalWalls[i][j]==1) line(j*100,i*100,j*100+100,i*100); // horizontal walls
+    }
+  }
+}
+
+void drawMazeCharacter()
+{
+  stroke(#C4BC28);
+  strokeWeight(6);
+  int tempCharacterX=mazeCharacterX*100+50;
+  int tempCharacterY=mazeCharacterY*100+25;
+  line(tempCharacterX,tempCharacterY,tempCharacterX,tempCharacterY+40); // spine
+  line(tempCharacterX,tempCharacterY+24,tempCharacterX-16,tempCharacterY+8); // left arm
+  line(tempCharacterX,tempCharacterY+24,tempCharacterX+16,tempCharacterY+8); // right arm
+  line(tempCharacterX,tempCharacterY+40,tempCharacterX-16,tempCharacterY+64); // left leg
+  line(tempCharacterX,tempCharacterY+40,tempCharacterX+16,tempCharacterY+64); // right leg
+  fill(#CBA779);
+  stroke(0);
+  strokeWeight(1);
+  ellipse(tempCharacterX,tempCharacterY,24,24); // head
+  fill(#EA8911);
+  arc(tempCharacterX,tempCharacterY,32,32,PI,2*PI,CHORD); // hat
+}
+
+void mazeOfLearningKey() // handles keyboard input for maze
+{
+  if(key=='w'&&mazeHorizontalWalls[mazeCharacterY][mazeCharacterX]==0) --mazeCharacterY;
+  else if(key=='s'&&mazeHorizontalWalls[mazeCharacterY+1][mazeCharacterX]==0) ++mazeCharacterY;
+  else if(key=='a'&&mazeVerticalWalls[mazeCharacterX][mazeCharacterY]==0) --mazeCharacterX;
+  else if(key=='d'&&mazeVerticalWalls[mazeCharacterX+1][mazeCharacterY]==0) ++mazeCharacterX;
+}
+
+void drawLightningBolt(int x,int y,float scale)
+{
+  beginShape();
+  vertex(x,y);
+  vertex(x+40*scale,y-20*scale);
+  vertex(x+60*scale,y-10*scale);
+  vertex(x+100*scale,y-35*scale);
+  vertex(x+60*scale,y+5*scale);
+  vertex(x+40*scale,y-10*scale);
+  endShape(CLOSE);
+}
+
+void drawMazeStation(int stationX,int stationY,boolean done)
+{
+  int tempStationX=stationX*100+50;
+  int tempStationY=stationY*100+70;
+  fill(#081798);
+  ellipse(tempStationX,tempStationY,80,40);
+  if(done) fill(#00DD00); // green bolt if done
+  else fill(#DD0000); // red otherwise
+  
+  drawLightningBolt(tempStationX-30,tempStationY+10,0.55);
+}
+
+void mazeOfLearning()
+{
+  background(50);
+  drawMazeWalls();
+  drawMazeCharacter();
+  drawMazeStation(4,3,true);
+}
+
 void gameOfTesting() {}
 
 void goodbye()
@@ -305,7 +405,7 @@ void goodbye()
   background(50);
   textFont(game_font,60);
   fill(#1AA0D3);
-  text("See you next time!",100,200);
+  text("See you next time!\nCreated by Peter Ye",100,200);
   ++exitWaves;
   if(exitWaves>=120) exit(); // exit the entire program
 }
@@ -333,4 +433,9 @@ void mouseClicked()
 {
   if(screenID==4) mainMenuMouse();
   else if(screenID==5) instructionsMouse();
+}
+
+void keyPressed()
+{
+  if(screenID==6) mazeOfLearningKey();
 }
