@@ -8,7 +8,7 @@ I used processing.org as a reference while completing this project.
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=0;
+int screenID=4;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -18,6 +18,7 @@ float characterX=310,characterY=370;
 int mazeCharacterX=1,mazeCharacterY=0;
 float bagAngle=0;
 
+int mazeStationTextDelay=0;
 int exitWaves=0;
 
 int[][] mazeVerticalWalls={
@@ -40,6 +41,11 @@ int[][] mazeHorizontalWalls={
 {0,0,0,0,1,0,0,0},
 {1,1,1,1,1,1,1,1}
 };
+
+boolean mazeStation1Done=false;
+boolean mazeStation2Done=false;
+boolean mazeStation3Done=false;
+boolean mazeStation4Done=false;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -382,8 +388,16 @@ void drawMazeStation(int stationX,int stationY,boolean done)
 {
   int tempStationX=stationX*100+50;
   int tempStationY=stationY*100+70;
+  strokeWeight(5);
+  stroke(#2A9DBC);
+  line(tempStationX,tempStationY,tempStationX-30,tempStationY-50);
+  line(tempStationX,tempStationY,tempStationX+30,tempStationY-50);
+  line(tempStationX,tempStationY,tempStationX,tempStationY-50);
+  strokeWeight(1);
+  stroke(0);
   fill(#081798);
   ellipse(tempStationX,tempStationY,80,40);
+  
   if(done) fill(#00DD00); // green bolt if done
   else fill(#DD0000); // red otherwise
   
@@ -394,8 +408,69 @@ void mazeOfLearning()
 {
   background(50);
   drawMazeWalls();
+  drawMazeStation(0,0,mazeStation1Done);
+  drawMazeStation(3,2,mazeStation2Done);
+  drawMazeStation(6,2,mazeStation3Done);
+  drawMazeStation(4,4,mazeStation4Done);
   drawMazeCharacter();
-  drawMazeStation(4,3,true);
+  
+  mazeStationTextDelay=60;
+  if(mazeCharacterX==0&&mazeCharacterY==0) screenID=61; // station 1
+  else if(mazeCharacterX==3&&mazeCharacterY==2) screenID=62; // station 2
+  else if(mazeCharacterX==6&&mazeCharacterY==2) screenID=63; // station 3
+  else if(mazeCharacterX==4&&mazeCharacterY==4) screenID=64; // station 4
+}
+
+void mazeStation1()
+{
+  background(50);
+  text("Station 1",50,50);
+  --mazeStationTextDelay;
+  if(mazeStationTextDelay<=0)
+  {
+    screenID/=10;
+    mazeStation1Done=true;
+    ++mazeCharacterY;
+  }
+}
+
+void mazeStation2()
+{
+  background(50);
+  text("Station 2",50,50);
+  --mazeStationTextDelay;
+  if(mazeStationTextDelay<=0)
+  {
+    screenID/=10;
+    mazeStation2Done=true;
+    ++mazeCharacterY;
+  }
+}
+
+void mazeStation3()
+{
+  background(50);
+  text("Station 3",50,50);
+  --mazeStationTextDelay;
+  if(mazeStationTextDelay<=0)
+  {
+    screenID/=10;
+    mazeStation3Done=true;
+    ++mazeCharacterY;
+  }
+}
+
+void mazeStation4()
+{
+  background(50);
+  text("Station 4",50,50);
+  --mazeStationTextDelay;
+  if(mazeStationTextDelay<=0)
+  {
+    screenID/=10;
+    mazeStation4Done=true;
+    ++mazeCharacterX;
+  }
 }
 
 void gameOfTesting() {}
@@ -425,6 +500,10 @@ void draw()
   else if(screenID==4) mainMenu();
   else if(screenID==5) instructions();
   else if(screenID==6) mazeOfLearning();
+  else if(screenID==61) mazeStation1();
+  else if(screenID==62) mazeStation2();
+  else if(screenID==63) mazeStation3();
+  else if(screenID==64) mazeStation4();
   else if(screenID==7) gameOfTesting();
   else if(screenID==8) goodbye();
 }
