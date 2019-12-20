@@ -8,10 +8,11 @@ I used processing.org as a reference while completing this project.
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=0;
+int screenID=6;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
+float helicopterBladeAngle=0;
 float gangX1=300,gangY1=200;
 float gangX2=300,gangY2=200;
 float characterX=310,characterY=370;
@@ -90,10 +91,6 @@ void drawHelicopter() // draws the helicopter
   stroke(80);
   strokeWeight(20);
   line(helicopterX,helicopterY-50,helicopterX,helicopterY-100);
-  stroke(#DBCA2A);
-  line(helicopterX-150,helicopterY-100,helicopterX+150,helicopterY-100); // helicopter blade
-  stroke(#D3C011);
-  line(helicopterX-100,helicopterY-50,helicopterX+100,helicopterY-150); // other helicopter blade
   stroke(50);
   strokeWeight(15);
   line(helicopterX-50,helicopterY,helicopterX-50,helicopterY+70);
@@ -105,10 +102,16 @@ void drawHelicopter() // draws the helicopter
   rect(helicopterX-200,helicopterY-20,200,20);
   ellipse(helicopterX,helicopterY,200,100);
   ellipse(helicopterX-200,helicopterY-20,30,80);
-  fill(80);
-  ellipse(helicopterX,helicopterY-100,20,20);
   fill(#20C9B9);
   rect(helicopterX-50,helicopterY-20,100,40);
+  strokeWeight(20);
+  stroke(#D3C011);
+  line(helicopterX-cos(helicopterBladeAngle)*150,(helicopterY-100)-sin(helicopterBladeAngle)*80,
+    helicopterX+cos(helicopterBladeAngle)*150,(helicopterY-100)+sin(helicopterBladeAngle)*80); // helicopter blade
+  strokeWeight(1);
+  stroke(0);
+  fill(80);
+  ellipse(helicopterX,helicopterY-100,20,20);
 }
 
 void drawGang(float gangX,float gangY)
@@ -163,6 +166,7 @@ void introAnimationPart1()
   fill(#79C9CB);
   rect(0,400,800,100);
   drawCharacter();
+  helicopterBladeAngle+=0.1;
   if(helicopterX<300) ++helicopterX; // moves helicopter to the right
   else
   {
@@ -431,6 +435,38 @@ void drawBattery(int x,int y)
   drawLightningBolt(x+10,y+10,0.8);
 }
 
+void drawLightBulb(int x,int y,color c)
+{
+  fill(150);
+  rect(x-10,y-10,120,20);
+  fill(100);
+  rect(x,y-25,100,50,8);
+  fill(c);
+  ellipse(x+50,y-30,30,70);
+  strokeWeight(2);
+  stroke(#B77421);
+  line(x,y,x+46,y);
+  line(x+54,y,x+100,y);
+  line(x+46,y,x+42,y-30);
+  line(x+54,y,x+56,y-40);
+  line(x+42,y-30,x+56,y-40);
+  stroke(0);
+  strokeWeight(1);
+}
+
+void drawSwitch(int x,int y,boolean closed)
+{
+  fill(150);
+  rect(x-10,y-10,120,20);
+  fill(100);
+  rect(x,y-25,100,50,8);
+  fill(150);
+  rect(x+10,y,15,-40);
+  rect(x+75,y,15,-40);
+  //fill(#DECF28);
+  //drawLightningBolt(x+10,y+10,0.8);
+}
+
 void mazeStation1()
 {
   background(#58E0DF);
@@ -440,10 +476,12 @@ void mazeStation1()
   strokeWeight(1);
   textFont(game_font,30);
   text("An electrical switch can controll the flow of electricity. "
-    +"You can toggle a swtich by clicking on it. Toggle the switch "
+    +"You can toggle a switch by clicking on it. Toggle the switch "
     +"in the circuit above to turn the light on.",10,360,800,150);
     
   drawBattery(320,300);
+  drawLightBulb(280,140,#DDDD00);
+  drawSwitch(520,200,false);
   //--mazeStationTextDelay;
   if(mazeStationTextDelay<=0)
   {
