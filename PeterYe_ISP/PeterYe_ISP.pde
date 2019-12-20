@@ -48,6 +48,9 @@ boolean mazeStation2Done=false;
 boolean mazeStation3Done=false;
 boolean mazeStation4Done=false;
 
+boolean mazeStation1SwitchClosed=false;
+boolean mazeStation2SwitchClosed=false;
+
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
   return mouseX>=x&&mouseX<=x+boxLength&&mouseY>=y&&mouseY<=y+boxHeight;
@@ -306,7 +309,7 @@ void instructions()
   textFont(game_font,25);
   text("You are a master electrician named Megavolt." // extremely long instructions
   +" You have been captured by a group of masked gang members" // split
-  +" and thrown into a secret base hidden in the heart of Toronto." // across
+  +" and thrown into a secret base hidden in underground Toronto." // across
   +" The gang has locked you up behind multiple layers of electrical security" // multiple
   +" equipment. You must escape undiscovered -" // lines!
   +" and not electrocuted, of course!\n\nControls\n"
@@ -418,11 +421,11 @@ void mazeOfLearning()
   drawMazeStation(4,4,mazeStation4Done);
   drawMazeCharacter();
   
-  mazeStationTextDelay=60;
-  if(mazeCharacterX==0&&mazeCharacterY==0) screenID=61; // station 1
-  else if(mazeCharacterX==3&&mazeCharacterY==2) screenID=62; // station 2
-  else if(mazeCharacterX==6&&mazeCharacterY==2) screenID=63; // station 3
-  else if(mazeCharacterX==4&&mazeCharacterY==4) screenID=64; // station 4
+  mazeStationTextDelay=120;
+  if(!mazeStation1Done&&mazeCharacterX==0&&mazeCharacterY==0) screenID=61; // station 1
+  else if(!mazeStation2Done&&mazeCharacterX==3&&mazeCharacterY==2) screenID=62; // station 2
+  else if(!mazeStation3Done&&mazeCharacterX==6&&mazeCharacterY==2) screenID=63; // station 3
+  else if(!mazeStation4Done&&mazeCharacterX==4&&mazeCharacterY==4) screenID=64; // station 4
 }
 
 void drawBattery(int x,int y)
@@ -456,15 +459,56 @@ void drawLightBulb(int x,int y,color c)
 
 void drawSwitch(int x,int y,boolean closed)
 {
+  if(closed) // switch closed (electricity can flow through)
+  {
+    strokeWeight(15);
+    stroke(125);
+    line(x+10,y-40,x+100,y-40);
+    stroke(0);
+    strokeWeight(1);
+  }
+  else // switch open (no electricity flow)
+  {
+    strokeWeight(15);
+    stroke(125);
+    line(x+10,y-40,x+80,y-80);
+    stroke(0);
+    strokeWeight(1);
+  }
   fill(150);
   rect(x-10,y-10,120,20);
   fill(100);
   rect(x,y-25,100,50,8);
   fill(150);
-  rect(x+10,y,15,-40);
-  rect(x+75,y,15,-40);
+  rect(x+10,y,15,-50);
+  rect(x+75,y,15,-50);
+  
   //fill(#DECF28);
   //drawLightningBolt(x+10,y+10,0.8);
+}
+
+boolean mouseInSwitch(int x,int y)
+{
+  return mouseInBox(x,y-25,100,50);
+}
+
+void mazeStation1Mouse()
+{
+  if(!mazeStation1Done&&mouseInSwitch(520,200)) mazeStation1SwitchClosed=!mazeStation1SwitchClosed;
+  // toggle switch
+}
+
+void drawWire(int x1,int y1,int x2,int y2,int x3,int y3,color c)
+{
+  noFill();
+  stroke(c);
+  strokeWeight(3);
+  beginShape();
+  vertex(x1,y1);
+  quadraticVertex(x2,y2,x3,y3);
+  endShape();
+  strokeWeight(1);
+  stroke(0);
 }
 
 void mazeStation1()
@@ -475,32 +519,63 @@ void mazeStation1()
   line(0,350,800,350);
   strokeWeight(1);
   textFont(game_font,30);
-  text("An electrical switch can controll the flow of electricity. "
+  text("An electrical switch can control the flow of electricity. "
     +"You can toggle a switch by clicking on it. Toggle the switch "
     +"in the circuit above to turn the light on.",10,360,800,150);
-    
+  
+  drawWire(420,300,700,300,620,200,#DD0000);
+  drawWire(520,200,450,180,380,140,#411BDE);
+  drawWire(280,140,200,200,320,300,#AD10C6);
   drawBattery(320,300);
-  drawLightBulb(280,140,#DDDD00);
-  drawSwitch(520,200,false);
-  //--mazeStationTextDelay;
-  if(mazeStationTextDelay<=0)
+  if(mazeStation1SwitchClosed) drawLightBulb(280,140,#DDDD00);
+  else drawLightBulb(280,140,150);
+  
+  drawSwitch(520,200,mazeStation1SwitchClosed);
+  
+  
+  if(mazeStation1SwitchClosed)
   {
-    screenID/=10;
     mazeStation1Done=true;
-    ++mazeCharacterY;
+    --mazeStationTextDelay;
+    if(mazeStationTextDelay<=0)
+    {
+      screenID/=10;
+    }
   }
 }
 
 void mazeStation2()
 {
-  background(50);
-  text("Station 2",50,50);
-  --mazeStationTextDelay;
-  if(mazeStationTextDelay<=0)
+  background(#58E0DF);
+  fill(50);
+  strokeWeight(3);
+  line(0,350,800,350);
+  strokeWeight(1);
+  textFont(game_font,25);
+  text("A series circuit is a circuit which has multiple "
+    +"electrical loads connected together to form one path. "
+    +"A switch in a series circuit will turn off all of the loads "
+    +"when switched off. Toggle the switch above to turn off "
+    +"both the red light and the green light.",10,360,790,150);
+  
+  drawWire(420,300,700,300,620,200,#DD0000);
+  drawWire(520,200,450,180,380,140,#411BDE);
+  drawWire(280,140,200,200,320,300,#AD10C6);
+  drawBattery(320,300);
+  if(mazeStation2SwitchClosed) drawLightBulb(280,140,#DDDD00);
+  else drawLightBulb(280,140,150);
+  
+  drawSwitch(620,200,mazeStation2SwitchClosed);
+  
+  
+  if(mazeStation2SwitchClosed)
   {
-    screenID/=10;
     mazeStation2Done=true;
-    ++mazeCharacterY;
+    --mazeStationTextDelay;
+    if(mazeStationTextDelay<=0)
+    {
+      screenID/=10;
+    }
   }
 }
 
@@ -513,7 +588,7 @@ void mazeStation3()
   {
     screenID/=10;
     mazeStation3Done=true;
-    ++mazeCharacterY;
+    //++mazeCharacterY;
   }
 }
 
@@ -526,7 +601,7 @@ void mazeStation4()
   {
     screenID/=10;
     mazeStation4Done=true;
-    ++mazeCharacterX;
+    //++mazeCharacterX;
   }
 }
 
@@ -569,6 +644,7 @@ void mouseClicked()
 {
   if(screenID==4) mainMenuMouse();
   else if(screenID==5) instructionsMouse();
+  else if(screenID==61) mazeStation1Mouse();
 }
 
 void keyPressed()
