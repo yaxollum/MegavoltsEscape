@@ -8,7 +8,7 @@ I used processing.org as a reference while completing this project.
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=4;
+int screenID=0;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -421,11 +421,30 @@ void mazeOfLearning()
   else if(mazeCharacterX==4&&mazeCharacterY==4) screenID=64; // station 4
 }
 
+void drawBattery(int x,int y)
+{
+  fill(150);
+  rect(x-10,y-10,120,20);
+  fill(100);
+  rect(x,y-20,100,40,8);
+  fill(#DECF28);
+  drawLightningBolt(x+10,y+10,0.8);
+}
+
 void mazeStation1()
 {
-  background(50);
-  text("Station 1",50,50);
-  --mazeStationTextDelay;
+  background(#58E0DF);
+  fill(50);
+  strokeWeight(3);
+  line(0,350,800,350);
+  strokeWeight(1);
+  textFont(game_font,30);
+  text("An electrical switch can controll the flow of electricity. "
+    +"You can toggle a swtich by clicking on it. Toggle the switch "
+    +"in the circuit above to turn the light on.",10,360,800,150);
+    
+  drawBattery(320,300);
+  //--mazeStationTextDelay;
   if(mazeStationTextDelay<=0)
   {
     screenID/=10;
