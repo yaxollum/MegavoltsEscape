@@ -3,6 +3,8 @@ January 3, 2020
 ICS20 ISP
 Megavolt's Escape
 I used processing.org as a reference while completing this project.
+I have also previously learned some programming concepts such as passing parameters to methods
+and returning values from "Think Java" by Allen B. Downey
 */
 
 int loadingBarLength=0;
@@ -477,7 +479,8 @@ void drawSwitch(int x,int y,boolean closed)
   }
   fill(150);
   rect(x-10,y-10,120,20);
-  fill(100);
+  if(mouseInSwitch(x,y)) fill(130);
+  else fill(100);
   rect(x,y-25,100,50,8);
   fill(150);
   rect(x+10,y,15,-50);
@@ -544,6 +547,12 @@ void mazeStation1()
   }
 }
 
+void mazeStation2Mouse()
+{
+  if(!mazeStation2Done&&mouseInSwitch(620,200)) mazeStation2SwitchClosed=!mazeStation2SwitchClosed;
+  // toggle switch
+}
+
 void mazeStation2()
 {
   background(#58E0DF);
@@ -558,15 +567,17 @@ void mazeStation2()
     +"when switched off. Toggle the switch above to turn off "
     +"both the red light and the green light.",10,360,790,150);
   
-  drawWire(420,300,700,300,620,200,#DD0000);
-  drawWire(520,200,450,180,380,140,#411BDE);
-  drawWire(280,140,200,200,320,300,#AD10C6);
+  drawWire(420,300,900,300,720,200,#DD0000);
+  drawWire(620,200,550,150,500,150,#411BDE);
+  drawWire(400,150,300,160,280,140,#AD10C6);
+  drawWire(180,140,0,220,320,300,#11A50A);
   drawBattery(320,300);
-  if(mazeStation2SwitchClosed) drawLightBulb(280,140,#DDDD00);
-  else drawLightBulb(280,140,150);
+  if(mazeStation2SwitchClosed) drawLightBulb(400,150,#DD0000);
+  else drawLightBulb(400,150,150);
+  if(mazeStation2SwitchClosed) drawLightBulb(180,140,#00DD00);
+  else drawLightBulb(180,140,150);
   
   drawSwitch(620,200,mazeStation2SwitchClosed);
-  
   
   if(mazeStation2SwitchClosed)
   {
@@ -645,6 +656,7 @@ void mouseClicked()
   if(screenID==4) mainMenuMouse();
   else if(screenID==5) instructionsMouse();
   else if(screenID==61) mazeStation1Mouse();
+  else if(screenID==62) mazeStation2Mouse();
 }
 
 void keyPressed()
