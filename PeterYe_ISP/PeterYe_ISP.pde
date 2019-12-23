@@ -10,7 +10,7 @@ and returning values from "Think Java" by Allen B. Downey
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=6;
+int screenID=0;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -52,6 +52,9 @@ boolean mazeStation4Done=false;
 
 boolean mazeStation1SwitchClosed=false;
 boolean mazeStation2SwitchClosed=false;
+boolean mazeStation3Switch1Closed=false;
+boolean mazeStation3Switch2Closed=true;
+boolean mazeStation3Switch3Closed=true;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -514,6 +517,15 @@ void drawWire(int x1,int y1,int x2,int y2,int x3,int y3,color c)
   stroke(0);
 }
 
+void goodJobBanner()
+{
+  fill(50);
+  rect(0,350,800,150);
+  fill(#00DD00);
+  textFont(game_font,50);
+  text("Good Job!",270,440);
+}
+
 void mazeStation1()
 {
   background(#58E0DF);
@@ -538,6 +550,7 @@ void mazeStation1()
   
   if(mazeStation1SwitchClosed)
   {
+    goodJobBanner();
     mazeStation1Done=true;
     --mazeStationTextDelay;
     if(mazeStationTextDelay<=0)
@@ -581,6 +594,7 @@ void mazeStation2()
   
   if(mazeStation2SwitchClosed)
   {
+    goodJobBanner();
     mazeStation2Done=true;
     --mazeStationTextDelay;
     if(mazeStationTextDelay<=0)
@@ -590,16 +604,61 @@ void mazeStation2()
   }
 }
 
+void mazeStation3Mouse()
+{
+  if(!mazeStation3Done&&mouseInSwitch(100,120)) mazeStation3Switch1Closed=!mazeStation3Switch1Closed;
+  // toggle switch 1
+  
+  if(!mazeStation3Done&&mouseInSwitch(500,100)) mazeStation3Switch2Closed=!mazeStation3Switch2Closed;
+  // toggle switch 2
+  
+  if(!mazeStation3Done&&mouseInSwitch(500,220)) mazeStation3Switch3Closed=!mazeStation3Switch3Closed;
+  // toggle switch 3
+}
+
 void mazeStation3()
 {
-  background(50);
-  text("Station 3",50,50);
-  --mazeStationTextDelay;
-  if(mazeStationTextDelay<=0)
+  background(#58E0DF);
+  fill(50);
+  strokeWeight(3);
+  line(0,350,800,350);
+  strokeWeight(1);
+  textFont(game_font,25);
+  text("A parallel circuit is a circuit which has multiple loads, "
+    +"each forming a separate branch for electricity to flow through. "
+    +"This allows each load to be switched on and off separately. "
+    +"Toggle the switches above to turn on the red light but leave the green "
+    +"light off.",10,360,790,150);
+  
+  boolean greenLightOn=mazeStation3Switch1Closed&&mazeStation3Switch2Closed;
+  boolean redLightOn=mazeStation3Switch1Closed&&mazeStation3Switch3Closed;;
+    
+  drawWire(450,320,-100,200,100,120,#411BDE);
+  drawWire(200,120,310,115,350,90,#AD10C6);
+  drawWire(450,90,470,95,500,100,#AD10C6);
+  drawWire(600,100,950,200,600,220,#AD10C6);
+  drawWire(200,120,250,140,340,185,#11A50A);
+  drawWire(440,185,440,185,500,220,#11A50A);
+  drawWire(600,220,700,250,550,320,#411BDE);
+  
+  drawBattery(450,320);
+  drawSwitch(100,120,mazeStation3Switch1Closed);
+  if(greenLightOn) drawLightBulb(350,90,#00DD00);
+  else drawLightBulb(350,90,150);
+  drawSwitch(500,100,mazeStation3Switch2Closed);
+  if(redLightOn) drawLightBulb(340,185,#DD0000);
+  else drawLightBulb(340,185,150);
+  drawSwitch(500,220,mazeStation3Switch3Closed);
+  
+  if(redLightOn&&!greenLightOn)
   {
-    screenID/=10;
+    goodJobBanner();
     mazeStation3Done=true;
-    //++mazeCharacterY;
+    --mazeStationTextDelay;
+    if(mazeStationTextDelay<=0)
+    {
+      screenID/=10;
+    }
   }
 }
 
@@ -657,6 +716,7 @@ void mouseClicked()
   else if(screenID==5) instructionsMouse();
   else if(screenID==61) mazeStation1Mouse();
   else if(screenID==62) mazeStation2Mouse();
+  else if(screenID==63) mazeStation3Mouse();
 }
 
 void keyPressed()
