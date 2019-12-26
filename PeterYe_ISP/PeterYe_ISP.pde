@@ -10,7 +10,7 @@ and returning values from "Think Java" by Allen B. Downey
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=0;
+int screenID=6;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -55,6 +55,11 @@ boolean mazeStation2SwitchClosed=false;
 boolean mazeStation3Switch1Closed=false;
 boolean mazeStation3Switch2Closed=true;
 boolean mazeStation3Switch3Closed=true;
+boolean mazeStation4Switch1Closed=false;
+boolean mazeStation4Switch2Closed=false;
+boolean mazeStation4Switch3Closed=false;
+
+boolean mazeStation4Page1=true;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -609,10 +614,10 @@ void mazeStation3Mouse()
   if(!mazeStation3Done&&mouseInSwitch(100,120)) mazeStation3Switch1Closed=!mazeStation3Switch1Closed;
   // toggle switch 1
   
-  if(!mazeStation3Done&&mouseInSwitch(500,100)) mazeStation3Switch2Closed=!mazeStation3Switch2Closed;
+  else if(!mazeStation3Done&&mouseInSwitch(500,100)) mazeStation3Switch2Closed=!mazeStation3Switch2Closed;
   // toggle switch 2
   
-  if(!mazeStation3Done&&mouseInSwitch(500,220)) mazeStation3Switch3Closed=!mazeStation3Switch3Closed;
+  else if(!mazeStation3Done&&mouseInSwitch(500,220)) mazeStation3Switch3Closed=!mazeStation3Switch3Closed;
   // toggle switch 3
 }
 
@@ -662,16 +667,89 @@ void mazeStation3()
   }
 }
 
+void mazeStation4Mouse()
+{
+  if(mazeStation4Done) return;
+  
+  if(mouseInBox(670,475,120,20)) mazeStation4Page1=!mazeStation4Page1;
+  
+  else if(mouseInSwitch(450,300)) mazeStation4Switch1Closed=!mazeStation4Switch1Closed;
+  // toggle switch 1
+  
+  else if(mouseInSwitch(320,190)) mazeStation4Switch2Closed=!mazeStation4Switch2Closed;
+  // toggle switch 2
+  
+  else if(mouseInSwitch(100,200)) mazeStation4Switch3Closed=!mazeStation4Switch3Closed;
+  // toggle switch 3
+}
+
 void mazeStation4()
 {
-  background(50);
-  text("Station 4",50,50);
-  --mazeStationTextDelay;
-  if(mazeStationTextDelay<=0)
+  background(#58E0DF);
+  fill(50);
+  strokeWeight(3);
+  line(0,350,800,350);
+  strokeWeight(1);
+  textFont(game_font,25);
+  if(mazeStation4Page1) // page 1
   {
-    screenID/=10;
+    text("Electricity always takes the path of least resistance. "
+      +"A short circuit is a special type of parallel circuit where "
+      +"the two ends of one or more loads are connected by a wire. "
+      +"This directs all of the electricity through the wire, "
+      +"causing none of it to go through the loads.",10,360,790,150);
+    if(mouseInBox(670,475,120,20)) fill(#DE6E6E);
+    else fill(#980505);
+
+    textFont(game_font,20);
+    text("(next page)",670,490);
+  }
+  else // page 2
+  {
+    text("Short circuiting a battery is very dangerous "
+      +"(only short circuit a portion of a circuit). "
+      +"Use a short circuit to turn on the green light above but leave the "
+      +"red light off (WITHOUT BLOWING UP THE BATTERY)",10,360,790,150);
+    
+    if(mouseInBox(670,475,120,20)) fill(#DE6E6E);
+    else fill(#980505);
+
+    textFont(game_font,20);
+    text("(prev page)",670,490);
+  }
+  
+  boolean batteryShortCircuit=mazeStation4Switch3Closed;
+  boolean greenLightOn=!batteryShortCircuit&&mazeStation4Switch1Closed;
+  boolean redLightOn=!batteryShortCircuit
+    &&mazeStation4Switch1Closed&&!mazeStation4Switch2Closed;
+  
+  drawWire(100,305,-170,150,320,70,#11A50A);
+  drawWire(100,300,0,250,100,200,#AD10C6);
+  drawWire(200,300,300,250,200,200,#AD10C6);
+  drawWire(320,190,200,130,320,70,#AD10C6);
+  drawWire(420,190,540,130,420,70,#AD10C6);
+  drawWire(420,65,500,100,570,100,#11A50A);
+  drawWire(670,100,900,200,550,300,#11A50A);
+  drawWire(200,300,300,270,450,300,#11A50A);
+  
+  drawBattery(100,300);
+  drawSwitch(450,300,mazeStation4Switch1Closed);
+  if(greenLightOn) drawLightBulb(570,100,#00DD00);
+  else drawLightBulb(570,100,150);
+  if(redLightOn) drawLightBulb(320,70,#DD0000);
+  else drawLightBulb(320,70,150);
+  drawSwitch(320,190,mazeStation4Switch2Closed);
+  drawSwitch(100,200,mazeStation4Switch3Closed);
+  
+  if(!redLightOn&&greenLightOn)
+  {
+    goodJobBanner();
     mazeStation4Done=true;
-    //++mazeCharacterX;
+    --mazeStationTextDelay;
+    if(mazeStationTextDelay<=0)
+    {
+      screenID/=10;
+    }
   }
 }
 
@@ -717,6 +795,7 @@ void mouseClicked()
   else if(screenID==61) mazeStation1Mouse();
   else if(screenID==62) mazeStation2Mouse();
   else if(screenID==63) mazeStation3Mouse();
+  else if(screenID==64) mazeStation4Mouse();
 }
 
 void keyPressed()
