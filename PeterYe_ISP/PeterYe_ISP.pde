@@ -10,7 +10,7 @@ and returning values from "Think Java" by Allen B. Downey
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=6;
+int screenID=64;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -667,6 +667,28 @@ void mazeStation3()
   }
 }
 
+void drawFlames(int x,int y)
+{
+  fill(#EA6C1C);
+  beginShape();
+  vertex(x+30,y+15);
+  bezierVertex(x,y-20,x+40,y-50,x+40,y-70);
+  bezierVertex(x+40,y-50,x+60,y-20,x+50,y+15);
+  endShape(CLOSE);
+  fill(#F22F0C);
+  beginShape();
+  vertex(x+45,y+10);
+  bezierVertex(x+50,y-20,x+40,y-50,x+80,y-60);
+  bezierVertex(x+60,y-50,x+100,y-20,x+60,y+10);
+  endShape(CLOSE);
+  stroke(#FAD723);
+  strokeWeight(4);
+  for(int loop=0;loop<10;++loop)
+  {
+    point(random(x,x+100),random(y-20,y+20));
+  }
+}
+
 void mazeStation4Mouse()
 {
   if(mazeStation4Done) return;
@@ -733,6 +755,8 @@ void mazeStation4()
   drawWire(200,300,300,270,450,300,#11A50A);
   
   drawBattery(100,300);
+  if(batteryShortCircuit) drawFlames(100,300);
+  
   drawSwitch(450,300,mazeStation4Switch1Closed);
   if(greenLightOn) drawLightBulb(570,100,#00DD00);
   else drawLightBulb(570,100,150);
