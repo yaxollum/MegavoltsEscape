@@ -10,7 +10,7 @@ and returning values from "Think Java" by Allen B. Downey
 int loadingBarLength=0;
 final int loadingBarMaxLength=400;
 PFont game_font;
-int screenID=64;
+int screenID=4;
 
 int introTimeDisplay=0;
 int helicopterX=0,helicopterY=200;
@@ -60,6 +60,17 @@ boolean mazeStation4Switch2Closed=false;
 boolean mazeStation4Switch3Closed=false;
 
 boolean mazeStation4Page1=true;
+
+boolean gameSwitch1Closed=false;
+boolean gameSwitch2Closed=false;
+
+boolean gameInit=false;
+
+float characterSpeedY=0;
+
+boolean gameAPressed=false;
+boolean gameWPressed=false;
+boolean gameDPressed=false;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -421,6 +432,24 @@ void drawMazeStation(int stationX,int stationY,boolean done)
   drawLightningBolt(tempStationX-30,tempStationY+10,0.55);
 }
 
+void drawExit()
+{
+  int exitX=4,exitY=3;
+  exitX*=100;
+  exitY*=100;
+  exitX+=50;
+  fill(#00DD00);
+  beginShape();
+  vertex(exitX+10,exitY);
+  vertex(exitX+10,exitY+50);
+  vertex(exitX+20,exitY+50);
+  vertex(exitX,exitY+80);
+  vertex(exitX-20,exitY+50);
+  vertex(exitX-10,exitY+50);
+  vertex(exitX-10,exitY);
+  endShape(CLOSE);
+}
+
 void mazeOfLearning()
 {
   background(50);
@@ -436,6 +465,13 @@ void mazeOfLearning()
   else if(!mazeStation2Done&&mazeCharacterX==3&&mazeCharacterY==2) screenID=62; // station 2
   else if(!mazeStation3Done&&mazeCharacterX==6&&mazeCharacterY==2) screenID=63; // station 3
   else if(!mazeStation4Done&&mazeCharacterX==4&&mazeCharacterY==4) screenID=64; // station 4
+  
+  if(mazeStation1Done&&mazeStation2Done&& // all stations completed
+    mazeStation3Done&&mazeStation4Done)
+  {
+    drawExit();
+    if(mazeCharacterX==4&&mazeCharacterY==3) screenID=65; // mazeCompleted
+  }    
 }
 
 void drawBattery(int x,int y)
@@ -777,7 +813,112 @@ void mazeStation4()
   }
 }
 
-void gameOfTesting() {}
+void mazeCompleted()
+{
+  background(50);
+  fill(#13E5C7);
+  textFont(game_font,30);
+  text("Congratulations! You have completed the Maze of Learning. Now it's time to "
+    +"escape from the gang in the Game of Testing ...",50,50,700,400);
+    
+  if(mouseInBox(500,350,200,80)) fill(#49DCE3);
+  else fill(#2FC2C9);
+  rect(500,350,200,80);
+  textFont(game_font,40);
+  fill(0);
+  text("Continue",515,405);
+}
+
+
+void mazeCompletedMouse()
+{
+  if(mouseInBox(500,350,200,80)) screenID=4; // go back to mainMenu
+}
+
+void drawMotionDetector(int x,int y,int beamLength,boolean motionDetectorOn)
+{
+  if(motionDetectorOn)
+  {
+    strokeWeight(5);
+    stroke(#DD0000);
+    line(x+60,y,x+60,y+beamLength);
+    strokeWeight(1);
+    stroke(0);
+  }
+  fill(#E4E888);
+  rect(x+40,y,40,40,8);
+  fill(150);
+  rect(x-10,y-10,120,20);
+  fill(#83E3BA);
+  rect(x,y-25,100,50,8);
+  fill(50);
+  textFont(game_font,32);
+  text("NO-MO",x+6,y+12);
+}
+
+void gameOfTestingMouse()
+{
+  if(mouseInSwitch(50,90)) gameSwitch1Closed=!gameSwitch1Closed;
+  else if(mouseInSwitch(220,150)) gameSwitch2Closed=!gameSwitch2Closed;
+}
+
+void gameOfTestingMovement() // handles keyboard input for game
+{
+  if(gameAPressed) characterX-=5;
+  if(gameDPressed) characterX+=5;
+  if(gameWPressed&&characterY==260) characterSpeedY=-15;
+}
+
+void gameOfTesting()
+{
+  if(!gameInit)
+  {
+    characterX=50;
+    characterY=260;
+    gameInit=true;
+  }
+  background(50);
+  fill(#00DD00);
+  strokeWeight(3);
+  line(0,400,800,400);
+  strokeWeight(1);
+  textFont(game_font,25);
+  text("To escape the base, you will need to turn off the motion "
+    +"detector without turning off the purple light and then "
+    +"cross the 500-kilovolt electrical wire. Good luck!",10,410,790,150);
+  
+  fill(#744D0F);
+  rect(0,330,550,70,0,30,0,0); // only curve top right corner
+  
+  boolean motionDetectorOn=gameSwitch1Closed&&!gameSwitch2Closed;
+  boolean lightOn=gameSwitch1Closed;
+  
+  drawWire(150,90,750,-50,480,100,#0F66F0);
+  drawWire(300,200,400,170,320,150,#0F66F0);
+  drawWire(325,155,350,120,375,100,#0F66F0);
+  drawWire(155,90,185,110,215,155,#0F66F0);
+  drawWire(45,90,-30,150,45,200,#0F66F0);
+  drawWire(150,200,200,200,200,200,#0F66F0);
+  
+  drawSwitch(50,90,gameSwitch1Closed);
+  drawSwitch(220,150,gameSwitch2Closed);
+  if(lightOn) drawLightBulb(50,200,#A428F7);
+  else drawLightBulb(50,200,150);
+  drawBattery(200,200);
+  drawMotionDetector(380,100,225,motionDetectorOn);
+  
+  gameOfTestingMovement();
+  
+  drawCharacter();
+  if(characterX<20) characterX=20;
+  characterY+=characterSpeedY;
+  if(characterY<260) characterSpeedY+=1;
+  else
+  {
+    characterSpeedY=0;
+    characterY=260;
+  }
+}
 
 void goodbye()
 {
@@ -808,6 +949,7 @@ void draw()
   else if(screenID==62) mazeStation2();
   else if(screenID==63) mazeStation3();
   else if(screenID==64) mazeStation4();
+  else if(screenID==65) mazeCompleted();
   else if(screenID==7) gameOfTesting();
   else if(screenID==8) goodbye();
 }
@@ -820,9 +962,27 @@ void mouseClicked()
   else if(screenID==62) mazeStation2Mouse();
   else if(screenID==63) mazeStation3Mouse();
   else if(screenID==64) mazeStation4Mouse();
+  else if(screenID==65) mazeCompletedMouse();
+  else if(screenID==7) gameOfTestingMouse();
 }
 
 void keyPressed()
 {
   if(screenID==6) mazeOfLearningKey();
+  else if(screenID==7)
+  {
+    if(key=='w') gameWPressed=true;
+    else if(key=='a') gameAPressed=true;
+    else if(key=='d') gameDPressed=true;
+  }
+}
+
+void keyReleased()
+{
+  if(screenID==7)
+  {
+    if(key=='w') gameWPressed=false;
+    else if(key=='a') gameAPressed=false;
+    else if(key=='d') gameDPressed=false;
+  }
 }
