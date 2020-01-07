@@ -925,7 +925,24 @@ void gameOfTestingFail2()
   background(50);
   fill(#13E5C7);
   textFont(game_font,30);
-  text("Oh no! BADDDDDDDD You have turned off the purple light "
+  text("Oh no! The motion detector has triggered an alarm "
+    +"and the guards have discovered you! You have "
+    +"been thrown back into prison but have still not given up!",50,50,700,400);
+    
+  if(mouseInBox(500,350,200,80)) fill(#49DCE3);
+  else fill(#2FC2C9);
+  rect(500,350,200,80);
+  textFont(game_font,40);
+  fill(0);
+  text("Continue",515,405);
+}
+
+void gameOfTestingFail3()
+{
+  background(50);
+  fill(#13E5C7);
+  textFont(game_font,30);
+  text("Oh no! You have been electrocuted (explain how) "
     +"and the guards have discovered you! You have "
     +"been thrown back into prison but have still not given up!",50,50,700,400);
     
@@ -950,7 +967,7 @@ void gameOfTesting()
     +"cross the 500-kilovolt electrical wire. Good luck!",10,410,790,150);
   
   fill(#744D0F);
-  rect(0,330,550,70,0,30,0,0); // only curve top right corner
+  rect(0,330,550,70,0,20,0,0); // only curve top right corner
   
   boolean motionDetectorOn=gameSwitch1Closed&&!gameSwitch2Closed;
   boolean lightOn=gameSwitch1Closed;
@@ -968,6 +985,10 @@ void gameOfTesting()
   else drawLightBulb(50,200,150);
   drawBattery(200,200);
   drawMotionDetector(380,100,225,motionDetectorOn);
+  
+  drawWire(560,350,560,330,580,330,#CD7F32);
+  drawWire(560,400,560,350,560,350,#CD7F32);
+  drawWire(580,330,800,330,800,330,#CD7F32);
   
   gameOfTestingMovement();
   
@@ -989,6 +1010,16 @@ void gameOfTesting()
     if(gameTextDelay<=0)
     {
       screenID=72;
+    }
+  }
+  else if(characterY==260&&(characterX>=545&&characterX<=565))
+  {
+    gameFailed=true;
+    gameFailBanner();
+    --gameTextDelay;
+    if(gameTextDelay<=0)
+    {
+      screenID=73;
     }
   }
   
@@ -1048,6 +1079,7 @@ void draw()
   else if(screenID==7) gameOfTesting();
   else if(screenID==71) gameOfTestingFail1();
   else if(screenID==72) gameOfTestingFail2();
+  else if(screenID==73) gameOfTestingFail3();
   else if(screenID==8) goodbye();
 }
 
@@ -1061,7 +1093,7 @@ void mouseClicked()
   else if(screenID==64) mazeStation4Mouse();
   else if(screenID==65) mazeCompletedMouse();
   else if(screenID==7) gameOfTestingMouse();
-  else if(screenID==71) gameOfTestingFailMouse();
+  else if(screenID==71||screenID==72) gameOfTestingFailMouse();
 }
 
 void keyPressed()
