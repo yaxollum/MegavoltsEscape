@@ -61,16 +61,17 @@ boolean mazeStation4Switch3Closed=false;
 
 boolean mazeStation4Page1=true;
 
-boolean gameSwitch1Closed=false;
+boolean gameSwitch1Closed=true;
 boolean gameSwitch2Closed=false;
-
-boolean gameInit=false;
 
 float characterSpeedY=0;
 
 boolean gameAPressed=false;
 boolean gameWPressed=false;
 boolean gameDPressed=false;
+
+int gameTextDelay=0;
+boolean gameFailed=false;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -318,7 +319,11 @@ void mainMenuMouse()
 {
   if(mouseInBox(200,50,400,80)) ++screenID; // instructions
   else if(mouseInBox(200,150,400,80)) screenID+=2; // maze of learning
-  else if(mouseInBox(200,250,400,80)) screenID+=3; // game of testing
+  else if(mouseInBox(200,250,400,80)) 
+  {
+    gameOfTestingInit();
+    screenID+=3; // game of testing
+  }
   else if(mouseInBox(200,350,400,80)) screenID+=4; // exit
 }
 
@@ -858,25 +863,82 @@ void drawMotionDetector(int x,int y,int beamLength,boolean motionDetectorOn)
 
 void gameOfTestingMouse()
 {
+  if(gameFailed) return; // don't let the character toggle
+                         // switches if they fail
   if(mouseInSwitch(50,90)) gameSwitch1Closed=!gameSwitch1Closed;
   else if(mouseInSwitch(220,150)) gameSwitch2Closed=!gameSwitch2Closed;
 }
 
 void gameOfTestingMovement() // handles keyboard input for game
 {
+  if(gameFailed) return; // don't let the character move if they fail
   if(gameAPressed) characterX-=5;
   if(gameDPressed) characterX+=5;
   if(gameWPressed&&characterY==260) characterSpeedY=-15;
 }
 
+void gameOfTestingInit() // resets the state of the game
+{
+  gameTextDelay=120;
+  characterX=50;
+  characterY=260;
+  gameSwitch1Closed=true;
+  gameSwitch2Closed=false;
+
+  characterSpeedY=0;
+
+  gameAPressed=false;
+  gameWPressed=false;
+  gameDPressed=false;
+  
+  gameFailed=false;
+}
+
+void gameOfTestingFailMouse()
+{
+  if(mouseInBox(500,350,200,80))
+  {
+    gameOfTestingInit();
+    screenID/=10; // go back to game
+  }
+}
+
+void gameOfTestingFail1()
+{
+  background(50);
+  fill(#13E5C7);
+  textFont(game_font,30);
+  text("Oh no! You have turned off the purple light "
+    +"and the guards have discovered you! You have "
+    +"been thrown back into prison but have still not given up!",50,50,700,400);
+    
+  if(mouseInBox(500,350,200,80)) fill(#49DCE3);
+  else fill(#2FC2C9);
+  rect(500,350,200,80);
+  textFont(game_font,40);
+  fill(0);
+  text("Continue",515,405);
+}
+
+void gameOfTestingFail2()
+{
+  background(50);
+  fill(#13E5C7);
+  textFont(game_font,30);
+  text("Oh no! BADDDDDDDD You have turned off the purple light "
+    +"and the guards have discovered you! You have "
+    +"been thrown back into prison but have still not given up!",50,50,700,400);
+    
+  if(mouseInBox(500,350,200,80)) fill(#49DCE3);
+  else fill(#2FC2C9);
+  rect(500,350,200,80);
+  textFont(game_font,40);
+  fill(0);
+  text("Continue",515,405);
+}
+
 void gameOfTesting()
 {
-  if(!gameInit)
-  {
-    characterX=50;
-    characterY=260;
-    gameInit=true;
-  }
   background(50);
   fill(#00DD00);
   strokeWeight(3);
@@ -909,15 +971,48 @@ void gameOfTesting()
   
   gameOfTestingMovement();
   
-  drawCharacter();
-  if(characterX<20) characterX=20;
-  characterY+=characterSpeedY;
-  if(characterY<260) characterSpeedY+=1;
-  else
+  if(!lightOn)
   {
-    characterSpeedY=0;
-    characterY=260;
+    gameFailed=true;
+    gameFailBanner();
+    --gameTextDelay;
+    if(gameTextDelay<=0)
+    {
+      screenID=71;
+    }
   }
+  else if(motionDetectorOn&&(characterX>=420&&characterX<=460))
+  {
+    gameFailed=true;
+    gameFailBanner();
+    --gameTextDelay;
+    if(gameTextDelay<=0)
+    {
+      screenID=72;
+    }
+  }
+  
+  drawCharacter();
+  if(!gameFailed)
+  {
+    if(characterX<20) characterX=20;
+    characterY+=characterSpeedY;
+    if(characterY<260) characterSpeedY+=1;
+    else
+    {
+      characterSpeedY=0;
+      characterY=260;
+    }
+  }
+}
+
+void gameFailBanner()
+{
+  fill(50);
+  rect(0,400,800,100);
+  fill(#DD0000);
+  textFont(game_font,50);
+  text("ESCAPE FAILED",220,460);
 }
 
 void goodbye()
@@ -951,6 +1046,8 @@ void draw()
   else if(screenID==64) mazeStation4();
   else if(screenID==65) mazeCompleted();
   else if(screenID==7) gameOfTesting();
+  else if(screenID==71) gameOfTestingFail1();
+  else if(screenID==72) gameOfTestingFail2();
   else if(screenID==8) goodbye();
 }
 
@@ -964,6 +1061,7 @@ void mouseClicked()
   else if(screenID==64) mazeStation4Mouse();
   else if(screenID==65) mazeCompletedMouse();
   else if(screenID==7) gameOfTestingMouse();
+  else if(screenID==71) gameOfTestingFailMouse();
 }
 
 void keyPressed()
