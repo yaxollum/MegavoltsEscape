@@ -861,6 +861,13 @@ void drawMotionDetector(int x,int y,int beamLength,boolean motionDetectorOn)
   text("NO-MO",x+6,y+12);
 }
 
+void drawInsulator(int x)
+{
+  fill(150);
+  rect(x,330,10,70);
+  rect(x-10,350,30,50);
+}
+
 void gameOfTestingMouse()
 {
   if(gameFailed) return; // don't let the character toggle
@@ -941,10 +948,14 @@ void gameOfTestingFail3()
 {
   background(50);
   fill(#13E5C7);
-  textFont(game_font,30);
-  text("Oh no! You have been electrocuted (explain how) "
-    +"and the guards have discovered you! You have "
-    +"been thrown back into prison but have still not given up!",50,50,700,400);
+  textFont(game_font,25);
+  text("Oh no! You have been electrocuted and seriously injured. "
+    +"When one of your legs touched the 500 kilovolt wire and the other one "
+    +"touched the ground (zero volts), electricity flowed "
+    +"from the wire through your legs and into the ground. After 3 hours of intense "
+    +"medical treatment (the gang still wants you alive), "
+    +"you have decided to try to escape again! HINT: What keyboard "
+    +"controls are you not using?",50,50,700,400);
     
   if(mouseInBox(500,350,200,80)) fill(#49DCE3);
   else fill(#2FC2C9);
@@ -958,9 +969,6 @@ void gameOfTesting()
 {
   background(50);
   fill(#00DD00);
-  strokeWeight(3);
-  line(0,400,800,400);
-  strokeWeight(1);
   textFont(game_font,25);
   text("To escape the base, you will need to turn off the motion "
     +"detector without turning off the purple light and then "
@@ -990,7 +998,13 @@ void gameOfTesting()
   drawWire(560,400,560,350,560,350,#CD7F32);
   drawWire(580,330,800,330,800,330,#CD7F32);
   
+  drawInsulator(600);
+  
   gameOfTestingMovement();
+  
+  strokeWeight(3);
+  line(0,400,800,400);
+  strokeWeight(1);
   
   if(!lightOn)
   {
@@ -1093,7 +1107,7 @@ void mouseClicked()
   else if(screenID==64) mazeStation4Mouse();
   else if(screenID==65) mazeCompletedMouse();
   else if(screenID==7) gameOfTestingMouse();
-  else if(screenID==71||screenID==72) gameOfTestingFailMouse();
+  else if(screenID==71||screenID==72||screenID==73) gameOfTestingFailMouse();
 }
 
 void keyPressed()
