@@ -10,7 +10,7 @@ and returning values from "Think Java" by Allen B. Downey
 int loadingBarLength=0; // current length of loading bar
 final int loadingBarMaxLength=400; // length of loading bar at 100%
 PFont game_font; // font used in game
-int screenID=4; // stores the ID of the current screen
+int screenID=0; // stores the ID of the current screen
 
 int introTimeDisplay=0; // delays one week ago message
 int helicopterX=0,helicopterY=200; // coordinates of helicopter
@@ -74,7 +74,7 @@ int gameTextDelay=0; // delays success or fail banner in game of testing
 boolean gamePaused=false; // stores whether game controls have been disabled
 
 float armAngle=11*PI/8;
-float armAngleSpeed=0.05;
+float armAngleSpeed=0.04;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
@@ -1139,8 +1139,8 @@ void goodbye() // goodbye screen
   strokeWeight(20);
   stroke(#C4BC28);
   line(500,300,500,600); // spine of character
-  line(500,380,600,450);
-  line(500,380,400,360);
+  line(500,380,600,450); // right arm
+  line(500,380,400,360); // left arm
   strokeWeight(18);
   line(600,450,600,600);
   line(400,360,400+cos(armAngle)*100,360+sin(armAngle)*100);
