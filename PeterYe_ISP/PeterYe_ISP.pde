@@ -7,24 +7,24 @@ I have also previously learned some programming concepts such as passing paramet
 and returning values from "Think Java" by Allen B. Downey
 */
 
-int loadingBarLength=0;
-final int loadingBarMaxLength=400;
-PFont game_font;
-int screenID=0;
+int loadingBarLength=0; // current length of loading bar
+final int loadingBarMaxLength=400; // length of loading bar at 100%
+PFont game_font; // font used in game
+int screenID=4; // stores the ID of the current screen
 
-int introTimeDisplay=0;
-int helicopterX=0,helicopterY=200;
-float helicopterBladeAngle=0;
-float gangX1=300,gangY1=200;
-float gangX2=300,gangY2=200;
-float characterX=310,characterY=370;
-int mazeCharacterX=1,mazeCharacterY=0;
-float bagAngle=0;
+int introTimeDisplay=0; // delays one week ago message
+int helicopterX=0,helicopterY=200; // coordinates of helicopter
+float helicopterBladeAngle=0; // angle of helicopter blade
+float gangX1=300,gangY1=200; // coordinates of
+float gangX2=300,gangY2=200; // gang members
+float characterX=310,characterY=370; // coordinates of character
+int mazeCharacterX=1,mazeCharacterY=0; // coordinates of character in maze
+float bagAngle=0; // angle of the bag
 
-int mazeStationTextDelay=0;
-int exitWaves=0;
+int mazeStationTextDelay=0; // delays text inside maze stations
+int exitWaves=0; // delays goodbye screen
 
-int[][] mazeVerticalWalls={
+int[][] mazeVerticalWalls={ // vertical walls of maze
 {1,1,1,1,1},
 {1,1,1,1,0},
 {0,1,1,1,1},
@@ -36,7 +36,7 @@ int[][] mazeVerticalWalls={
 {1,1,1,1,1}
 };
 
-int[][] mazeHorizontalWalls={
+int[][] mazeHorizontalWalls={ // horizontal walls of maze
 {1,1,1,1,1,1,1,1},
 {0,0,1,1,1,1,1,0},
 {0,0,0,1,1,1,1,0},
@@ -45,13 +45,13 @@ int[][] mazeHorizontalWalls={
 {1,1,1,1,1,1,1,1}
 };
 
-boolean mazeStation1Done=false;
-boolean mazeStation2Done=false;
+boolean mazeStation1Done=false; // stores whether maze stations
+boolean mazeStation2Done=false; // have been completed
 boolean mazeStation3Done=false;
 boolean mazeStation4Done=false;
 
-boolean mazeStation1SwitchClosed=false;
-boolean mazeStation2SwitchClosed=false;
+boolean mazeStation1SwitchClosed=false; // stores state of switches
+boolean mazeStation2SwitchClosed=false; // in maze stations
 boolean mazeStation3Switch1Closed=false;
 boolean mazeStation3Switch2Closed=true;
 boolean mazeStation3Switch3Closed=true;
@@ -59,26 +59,29 @@ boolean mazeStation4Switch1Closed=false;
 boolean mazeStation4Switch2Closed=false;
 boolean mazeStation4Switch3Closed=false;
 
-boolean mazeStation4Page1=true;
+boolean mazeStation4Page1=true; // stores instruction page of maze station 4
 
-boolean gameSwitch1Closed=true;
-boolean gameSwitch2Closed=false;
+boolean gameSwitch1Closed=true; // stores state of switches
+boolean gameSwitch2Closed=false; // in game of testing
 
-float characterSpeedY=0;
+float characterSpeedY=0; // vertical speed of character in game of testing
 
-boolean gameAPressed=false;
-boolean gameWPressed=false;
+boolean gameAPressed=false; // stores which keys are held down
+boolean gameWPressed=false; // in game of testing
 boolean gameDPressed=false;
 
-int gameTextDelay=0;
-boolean gamePaused=false;
+int gameTextDelay=0; // delays success or fail banner in game of testing
+boolean gamePaused=false; // stores whether game controls have been disabled
+
+float armAngle=11*PI/8;
+float armAngleSpeed=0.05;
 
 boolean mouseInBox(int x,int y,int boxLength,int boxHeight) // returns whether mouse is in a given rectangular box
 {
   return mouseX>=x&&mouseX<=x+boxLength&&mouseY>=y&&mouseY<=y+boxHeight;
 }
 
-void loadingBar()
+void loadingBar() // loading bar
 {
   background(50);
   noStroke();
@@ -125,12 +128,12 @@ void drawHelicopter() // draws the helicopter
   strokeWeight(1);
   fill(#117C2E);
   rect(helicopterX-200,helicopterY-20,200,20);
-  ellipse(helicopterX,helicopterY,200,100);
+  ellipse(helicopterX,helicopterY,200,100); // body of helicopter
   ellipse(helicopterX-200,helicopterY-20,30,80);
   fill(#20C9B9);
   rect(helicopterX-50,helicopterY-20,100,40);
   strokeWeight(20);
-  stroke(#D3C011);
+  stroke(#D3C011); // helicoter blades
   line(helicopterX-cos(helicopterBladeAngle)*150,(helicopterY-100)-sin(helicopterBladeAngle)*80,
     helicopterX+cos(helicopterBladeAngle)*150,(helicopterY-100)+sin(helicopterBladeAngle)*80); // helicopter blade
   strokeWeight(1);
@@ -167,7 +170,7 @@ void drawCharacter()
   arc(characterX,characterY,40,40,PI,2*PI,CHORD); // hat
 }
 
-void drawBag()
+void drawBag() // bag put over character's head in animation
 {
   fill(#0C3981);
   strokeWeight(1);
@@ -177,14 +180,14 @@ void drawBag()
     gangX2-20+cos(bagAngle+PI/2)*60,gangY2+15-sin(bagAngle+PI/2)*60);
 }
 
-void drawStick()
+void drawStick() // stick stuck in character's mouth in animation
 {
   fill(#814C0C);
   strokeWeight(1);
   rect(gangX1+20,gangY1+5,30,8);
 }
 
-void introAnimationPart1()
+void introAnimationPart1() // part 1 of animation
 {
   background(150);
   drawHelicopter();
@@ -263,7 +266,7 @@ void drawBanner() // draws "BASE 3923" banner
   text("BASE 3923",440,180);
 }
 
-void introAnimationPart2()
+void introAnimationPart2() // part 2 of animation
 {
   background(150);
   fill(#B45DB3);
@@ -358,7 +361,7 @@ void instructionsMouse()
   if(mouseInBox(500,350,200,80)) --screenID; // go back to mainMenu
 }
 
-void drawMazeWalls()
+void drawMazeWalls() // draws walls of maze
 {
   strokeWeight(10);
   stroke(#8B4EE3);
@@ -380,7 +383,7 @@ void drawMazeWalls()
   }
 }
 
-void drawMazeCharacter()
+void drawMazeCharacter() // draws character in maze
 {
   stroke(#C4BC28);
   strokeWeight(6);
@@ -476,7 +479,7 @@ void mazeOfLearning()
   if(mazeStation1Done&&mazeStation2Done&& // all stations completed
     mazeStation3Done&&mazeStation4Done)
   {
-    drawExit();
+    drawExit(); // draw exit arrow
     if(mazeCharacterX==4&&mazeCharacterY==3) screenID=65; // mazeCompleted
   }    
 }
@@ -544,7 +547,7 @@ boolean mouseInSwitch(int x,int y)
                                     // is hovering over switch
 }
 
-void mazeStation1Mouse()
+void mazeStation1Mouse() // processes mouse input for maze station 1
 {
   if(!mazeStation1Done&&mouseInSwitch(520,200)) mazeStation1SwitchClosed=!mazeStation1SwitchClosed;
   // toggle switch
@@ -572,14 +575,14 @@ void goodJobBanner()
   text("Good Job!",270,440);
 }
 
-void mazeStation1()
+void mazeStation1() // station 1 of maze
 {
-  background(#58E0DF);
+  background(#58E0DF); // light blue
   fill(50);
   strokeWeight(3);
   line(0,350,800,350);
   strokeWeight(1);
-  textFont(game_font,30);
+  textFont(game_font,30); // instructions for level
   text("An electrical switch can control the flow of electricity. "
     +"You can toggle a switch by clicking on it. Toggle the switch "
     +"in the circuit above to turn the light on.",10,360,800,150);
@@ -589,37 +592,37 @@ void mazeStation1()
   drawWire(280,140,200,200,320,300,#AD10C6);
   drawBattery(320,300);
   if(mazeStation1SwitchClosed) drawLightBulb(280,140,#DDDD00);
-  else drawLightBulb(280,140,150);
+  else drawLightBulb(280,140,150); // light bulb
   
   drawSwitch(520,200,mazeStation1SwitchClosed);
   
   
-  if(mazeStation1SwitchClosed)
+  if(mazeStation1SwitchClosed) // level beat as soon as switch closed
   {
     goodJobBanner();
-    mazeStation1Done=true;
-    --mazeStationTextDelay;
+    mazeStation1Done=true; // disables mouse input
+    --mazeStationTextDelay; // delays text on good job banner
     if(mazeStationTextDelay<=0)
     {
-      screenID/=10;
+      screenID/=10; // returns to maze
     }
   }
 }
 
-void mazeStation2Mouse()
+void mazeStation2Mouse() // processes mouse input for maze station 2
 {
   if(!mazeStation2Done&&mouseInSwitch(620,200)) mazeStation2SwitchClosed=!mazeStation2SwitchClosed;
   // toggle switch
 }
 
-void mazeStation2()
+void mazeStation2() // station 2 of maze
 {
-  background(#58E0DF);
+  background(#58E0DF); // light blue
   fill(50);
   strokeWeight(3);
   line(0,350,800,350);
   strokeWeight(1);
-  textFont(game_font,25);
+  textFont(game_font,25); // instructions for level
   text("A series circuit is a circuit which has multiple "
     +"electrical loads connected together to form one path. "
     +"A switch in a series circuit will turn off all of the loads "
@@ -630,27 +633,27 @@ void mazeStation2()
   drawWire(620,200,550,150,500,150,#411BDE);
   drawWire(400,150,300,160,280,140,#AD10C6);
   drawWire(180,140,0,220,320,300,#11A50A);
-  drawBattery(320,300);
+  drawBattery(320,300); // battery
   if(mazeStation2SwitchClosed) drawLightBulb(400,150,#DD0000);
-  else drawLightBulb(400,150,150);
+  else drawLightBulb(400,150,150); // red light
   if(mazeStation2SwitchClosed) drawLightBulb(180,140,#00DD00);
-  else drawLightBulb(180,140,150);
+  else drawLightBulb(180,140,150); // green light
   
   drawSwitch(620,200,mazeStation2SwitchClosed);
   
-  if(mazeStation2SwitchClosed)
+  if(mazeStation2SwitchClosed) // level beat as soon as switch closed
   {
     goodJobBanner();
-    mazeStation2Done=true;
-    --mazeStationTextDelay;
+    mazeStation2Done=true; // disables mouse input
+    --mazeStationTextDelay; // delays good job banner
     if(mazeStationTextDelay<=0)
     {
-      screenID/=10;
+      screenID/=10; // returns to maze
     }
   }
 }
 
-void mazeStation3Mouse()
+void mazeStation3Mouse() // processes mouse input for maze station 3
 {
   if(!mazeStation3Done&&mouseInSwitch(100,120)) mazeStation3Switch1Closed=!mazeStation3Switch1Closed;
   // toggle switch 1
@@ -662,14 +665,14 @@ void mazeStation3Mouse()
   // toggle switch 3
 }
 
-void mazeStation3()
+void mazeStation3() // station 3 of maze
 {
-  background(#58E0DF);
+  background(#58E0DF); // light blue
   fill(50);
   strokeWeight(3);
   line(0,350,800,350);
   strokeWeight(1);
-  textFont(game_font,25);
+  textFont(game_font,25); // instructions for level
   text("A parallel circuit is a circuit which has multiple loads, "
     +"each forming a separate branch for electricity to flow through. "
     +"This allows each load to be switched on and off separately. "
@@ -687,55 +690,56 @@ void mazeStation3()
   drawWire(440,185,440,185,500,220,#11A50A);
   drawWire(600,220,700,250,550,320,#411BDE);
   
-  drawBattery(450,320);
-  drawSwitch(100,120,mazeStation3Switch1Closed);
+  drawBattery(450,320); // battery
+  drawSwitch(100,120,mazeStation3Switch1Closed); // switch 1
   if(greenLightOn) drawLightBulb(350,90,#00DD00);
-  else drawLightBulb(350,90,150);
-  drawSwitch(500,100,mazeStation3Switch2Closed);
+  else drawLightBulb(350,90,150); // green light
+  drawSwitch(500,100,mazeStation3Switch2Closed); // switch 2
   if(redLightOn) drawLightBulb(340,185,#DD0000);
-  else drawLightBulb(340,185,150);
-  drawSwitch(500,220,mazeStation3Switch3Closed);
+  else drawLightBulb(340,185,150); // red light
+  drawSwitch(500,220,mazeStation3Switch3Closed); // switch 3
   
-  if(redLightOn&&!greenLightOn)
+  if(redLightOn&&!greenLightOn) // red light on, green light off
   {
-    goodJobBanner();
-    mazeStation3Done=true;
+    goodJobBanner(); // displays good job
+    mazeStation3Done=true; // disables mouse input
     --mazeStationTextDelay;
     if(mazeStationTextDelay<=0)
     {
-      screenID/=10;
+      screenID/=10; // returns to maze
     }
   }
 }
 
-void drawFlames(int x,int y)
+void drawFlames(int x,int y) // draws fire for short circuit
 {
   fill(#EA6C1C);
   beginShape();
   vertex(x+30,y+15);
-  bezierVertex(x,y-20,x+40,y-50,x+40,y-70);
+  bezierVertex(x,y-20,x+40,y-50,x+40,y-70); // flame 1
   bezierVertex(x+40,y-50,x+60,y-20,x+50,y+15);
   endShape(CLOSE);
   fill(#F22F0C);
   beginShape();
   vertex(x+45,y+10);
-  bezierVertex(x+50,y-20,x+40,y-50,x+80,y-60);
+  bezierVertex(x+50,y-20,x+40,y-50,x+80,y-60); // flame 2
   bezierVertex(x+60,y-50,x+100,y-20,x+60,y+10);
   endShape(CLOSE);
   stroke(#FAD723);
   strokeWeight(4);
-  for(int loop=0;loop<10;++loop)
+  for(int loop=0;loop<10;++loop) // draw 10 bubbles every frame
   {
-    point(random(x,x+100),random(y-20,y+20));
+    point(random(x,x+100),random(y-20,y+20)); // bubbles inside fire
   }
 }
 
-void mazeStation4Mouse()
+void mazeStation4Mouse() // processes mouse input for maze station 4
 {
-  if(mazeStation4Done) return;
+  if(mazeStation4Done) return; // return if station completed
   
   if(mouseInBox(670,475,120,20)) mazeStation4Page1=!mazeStation4Page1;
-  
+    // flips the page for instructions
+    
   else if(mouseInSwitch(450,300)) mazeStation4Switch1Closed=!mazeStation4Switch1Closed;
   // toggle switch 1
   
@@ -746,15 +750,15 @@ void mazeStation4Mouse()
   // toggle switch 3
 }
 
-void mazeStation4()
+void mazeStation4() // maze station 4
 {
-  background(#58E0DF);
+  background(#58E0DF); // light blue background
   fill(50);
   strokeWeight(3);
   line(0,350,800,350);
   strokeWeight(1);
   textFont(game_font,25);
-  if(mazeStation4Page1) // page 1
+  if(mazeStation4Page1) // page 1 of instructions
   {
     text("Electricity always takes the path of least resistance. "
       +"A short circuit is a special type of parallel circuit where "
@@ -765,9 +769,9 @@ void mazeStation4()
     else fill(#980505);
 
     textFont(game_font,20);
-    text("(next page)",670,490);
+    text("(next page)",670,490); // clickable link
   }
-  else // page 2
+  else // page 2 of instructions
   {
     text("Short circuiting a battery is very dangerous "
       +"(only short circuit a portion of a circuit). "
@@ -778,47 +782,47 @@ void mazeStation4()
     else fill(#980505);
 
     textFont(game_font,20);
-    text("(prev page)",670,490);
+    text("(prev page)",670,490); // clickable link
   }
   
-  boolean batteryShortCircuit=mazeStation4Switch3Closed;
+  boolean batteryShortCircuit=mazeStation4Switch3Closed; // short circuit
   boolean greenLightOn=!batteryShortCircuit&&mazeStation4Switch1Closed;
   boolean redLightOn=!batteryShortCircuit
     &&mazeStation4Switch1Closed&&!mazeStation4Switch2Closed;
   
-  drawWire(100,305,-170,150,320,70,#11A50A);
-  drawWire(100,300,0,250,100,200,#AD10C6);
-  drawWire(200,300,300,250,200,200,#AD10C6);
+  drawWire(100,305,-170,150,320,70,#11A50A); // wires
+  drawWire(100,300,0,250,100,200,#AD10C6);   // for
+  drawWire(200,300,300,250,200,200,#AD10C6); // circuit
   drawWire(320,190,200,130,320,70,#AD10C6);
   drawWire(420,190,540,130,420,70,#AD10C6);
   drawWire(420,65,500,100,570,100,#11A50A);
   drawWire(670,100,900,200,550,300,#11A50A);
   drawWire(200,300,300,270,450,300,#11A50A);
   
-  drawBattery(100,300);
-  if(batteryShortCircuit) drawFlames(100,300);
+  drawBattery(100,300); // battery
+  if(batteryShortCircuit) drawFlames(100,300); // battery on fire
   
   drawSwitch(450,300,mazeStation4Switch1Closed);
   if(greenLightOn) drawLightBulb(570,100,#00DD00);
-  else drawLightBulb(570,100,150);
+  else drawLightBulb(570,100,150); // green light
   if(redLightOn) drawLightBulb(320,70,#DD0000);
-  else drawLightBulb(320,70,150);
+  else drawLightBulb(320,70,150); // red light
   drawSwitch(320,190,mazeStation4Switch2Closed);
   drawSwitch(100,200,mazeStation4Switch3Closed);
   
-  if(!redLightOn&&greenLightOn)
+  if(!redLightOn&&greenLightOn) // red light off, green light on
   {
-    goodJobBanner();
-    mazeStation4Done=true;
+    goodJobBanner(); // displays good job
+    mazeStation4Done=true; // disables mouse input
     --mazeStationTextDelay;
     if(mazeStationTextDelay<=0)
     {
-      screenID/=10;
+      screenID/=10; // returns to maze
     }
   }
 }
 
-void mazeCompleted()
+void mazeCompleted() // maze completed
 {
   background(50);
   fill(#13E5C7);
@@ -828,7 +832,7 @@ void mazeCompleted()
     
   if(mouseInBox(500,350,200,80)) fill(#49DCE3);
   else fill(#2FC2C9);
-  rect(500,350,200,80);
+  rect(500,350,200,80); // continue button
   textFont(game_font,40);
   fill(0);
   text("Continue",515,405);
@@ -841,12 +845,12 @@ void mazeCompletedMouse()
 }
 
 void drawMotionDetector(int x,int y,int beamLength,boolean motionDetectorOn)
-{
-  if(motionDetectorOn)
+{ // draws motion detector
+  if(motionDetectorOn) // motion detector connected to power
   {
     strokeWeight(5);
     stroke(#DD0000);
-    line(x+60,y,x+60,y+beamLength);
+    line(x+60,y,x+60,y+beamLength); // red laser
     strokeWeight(1);
     stroke(0);
   }
@@ -858,17 +862,17 @@ void drawMotionDetector(int x,int y,int beamLength,boolean motionDetectorOn)
   rect(x,y-25,100,50,8);
   fill(50);
   textFont(game_font,32);
-  text("NO-MO",x+6,y+12);
+  text("NO-MO",x+6,y+12); // text on motion detector
 }
 
-void drawInsulator(int x)
+void drawInsulator(int x) // ceramic insulator supporting wire
 {
   fill(150);
   rect(x,330,10,70);
   rect(x-5,350,20,50);
   for(int y=350;y<400;y+=10)
   {
-    line(x-5,y,x+15,y);
+    line(x-5,y,x+15,y); // lines on insulator
   }
 }
 
@@ -893,19 +897,19 @@ void gameOfTestingInit() // resets the state of the game
   gameTextDelay=120;
   characterX=50;
   characterY=260;
-  gameSwitch1Closed=true;
-  gameSwitch2Closed=false;
+  gameSwitch1Closed=true; // switch 1 closed
+  gameSwitch2Closed=false; // switch 2 open
 
   characterSpeedY=0;
 
-  gameAPressed=false;
+  gameAPressed=false; // no keys held down
   gameWPressed=false;
   gameDPressed=false;
   
   gamePaused=false;
 }
 
-void gameOfTestingFailMouse()
+void gameOfTestingFailMouse() // handles mouse input for fail screen
 {
   if(mouseInBox(500,350,200,80))
   {
@@ -914,28 +918,28 @@ void gameOfTestingFailMouse()
   }
 }
 
-void gameOfTestingFail1()
+void gameOfTestingFail1() // purple light turned off
 {
   background(50);
   fill(#13E5C7);
-  textFont(game_font,30);
+  textFont(game_font,30); // fail message
   text("Oh no! You have turned off the purple light "
     +"and the guards have discovered you! You have "
     +"been thrown back into prison but have still not given up!",50,50,700,400);
     
-  if(mouseInBox(500,350,200,80)) fill(#49DCE3);
+  if(mouseInBox(500,350,200,80)) fill(#49DCE3); // mouse hovered over button
   else fill(#2FC2C9);
   rect(500,350,200,80);
   textFont(game_font,40);
   fill(0);
-  text("Continue",515,405);
+  text("Continue",515,405); // continue button (goes back to game)
 }
 
-void gameOfTestingFail2()
+void gameOfTestingFail2() // detected by motion detector laser
 {
   background(50);
   fill(#13E5C7);
-  textFont(game_font,30);
+  textFont(game_font,30); // fail message
   text("Oh no! The motion detector has triggered an alarm "
     +"and the guards have discovered you! You have "
     +"been thrown back into prison but have still not given up!",50,50,700,400);
@@ -945,14 +949,14 @@ void gameOfTestingFail2()
   rect(500,350,200,80);
   textFont(game_font,40);
   fill(0);
-  text("Continue",515,405);
+  text("Continue",515,405); // continue button (goes back to game)
 }
 
-void gameOfTestingFail3()
+void gameOfTestingFail3() // electrocuted
 {
   background(50);
   fill(#13E5C7);
-  textFont(game_font,25);
+  textFont(game_font,25); // fail message
   text("Oh no! You have been electrocuted and seriously injured. "
     +"When one of your legs touched the 500 kilovolt wire and the other one "
     +"touched the ground (zero volts), electricity flowed "
@@ -966,13 +970,13 @@ void gameOfTestingFail3()
   rect(500,350,200,80);
   textFont(game_font,40);
   fill(0);
-  text("Continue",515,405);
+  text("Continue",515,405); // continue button (goes back to game)
 }
 
-void drawGameExit()
+void drawGameExit() // exit arrow for game
 {
-  int exitX=700,exitY=270;
-  fill(#00DD00);
+  int exitX=700,exitY=270; // coordinates of arrow
+  fill(#00DD00); // green
   beginShape();
   vertex(exitX,exitY+10);
   vertex(exitX+50,exitY+10);
@@ -993,11 +997,11 @@ void gameCompletedMouse()
   }
 }
 
-void gameCompleted()
+void gameCompleted() // player beat the game
 {
   background(50);
   fill(#00FF00);
-  textFont(game_font,50);
+  textFont(game_font,50); // congratulatory message
   text("YAY! You have escaped from the prison!",50,50,700,400);
     
   if(mouseInBox(500,350,200,80)) fill(#BBF2A9);
@@ -1005,43 +1009,43 @@ void gameCompleted()
   rect(500,350,200,80);
   textFont(game_font,40);
   fill(0);
-  text("Continue",515,405);
+  text("Continue",515,405); // continue button (goes back to main menu)
 }
 
 void gameOfTesting()
 {
   background(50);
   fill(#00DD00);
-  textFont(game_font,25);
+  textFont(game_font,25); // instructions for game
   text("To escape the base, you will need to turn off the motion "
     +"detector without turning off the purple light and then "
     +"cross the 500-kilovolt electrical wire. Good luck!",10,410,790,150);
   
   fill(#744D0F);
   rect(0,330,550,70,0,20,0,0); // only curve top right corner
-  
+                               // for the brown earth
   boolean motionDetectorOn=gameSwitch1Closed&&!gameSwitch2Closed;
   boolean lightOn=gameSwitch1Closed;
   
-  drawWire(150,90,750,-50,480,100,#0F66F0);
-  drawWire(300,200,400,170,320,150,#0F66F0);
-  drawWire(325,155,350,120,375,100,#0F66F0);
+  drawWire(150,90,750,-50,480,100,#0F66F0); // wires for motion
+  drawWire(300,200,400,170,320,150,#0F66F0); // detector and
+  drawWire(325,155,350,120,375,100,#0F66F0); // purple light
   drawWire(155,90,185,110,215,155,#0F66F0);
   drawWire(45,90,-30,150,45,200,#0F66F0);
   drawWire(150,200,200,200,200,200,#0F66F0);
   
-  drawSwitch(50,90,gameSwitch1Closed);
-  drawSwitch(220,150,gameSwitch2Closed);
+  drawSwitch(50,90,gameSwitch1Closed); // switch 1
+  drawSwitch(220,150,gameSwitch2Closed); // switch 2
   if(lightOn) drawLightBulb(50,200,#A428F7);
-  else drawLightBulb(50,200,150);
-  drawBattery(200,200);
-  drawMotionDetector(380,100,225,motionDetectorOn);
+  else drawLightBulb(50,200,150); // purple light
+  drawBattery(200,200);  // battery
+  drawMotionDetector(380,100,225,motionDetectorOn); // motion detector
   
-  drawInsulator(600);
+  drawInsulator(600); // ceramic insulators that hold up the wire
   drawInsulator(660);
   drawInsulator(720);
   
-  drawWire(560,350,560,330,580,330,#CD7F32);
+  drawWire(560,350,560,330,580,330,#CD7F32); // electrocution wire
   drawWire(560,400,560,350,560,350,#CD7F32);
   drawWire(580,330,800,330,800,330,#CD7F32);
   
@@ -1051,97 +1055,117 @@ void gameOfTesting()
   line(0,400,800,400);
   strokeWeight(1);
   
-  if(!lightOn)
+  if(!lightOn) // purple light off
   {
-    gamePaused=true;
-    gameFailBanner();
+    gamePaused=true; // disable all player input
+    gameFailBanner(); // fail
     --gameTextDelay;
     if(gameTextDelay<=0)
     {
-      screenID=71;
+      screenID=71; // moves to fail screen 1
     }
   }
   else if(motionDetectorOn&&(characterX>=420&&characterX<=460))
-  {
-    gamePaused=true;
-    gameFailBanner();
+  { // player detected by motion detector
+    gamePaused=true; // disable all player input
+    gameFailBanner(); // fail
     --gameTextDelay;
     if(gameTextDelay<=0)
     {
-      screenID=72;
+      screenID=72; // moves to fail screen 2
     }
   }
   else if(characterY==260&&(characterX>=545&&characterX<=565))
-  {
-    gamePaused=true;
-    gameFailBanner();
+  { // player electrocuted
+    gamePaused=true; // disable all player input
+    gameFailBanner(); // fail
     --gameTextDelay;
     if(gameTextDelay<=0)
     {
-      screenID=73;
+      screenID=73; // moves to fail screen 3
     }
   }
   else if(characterX>750) // player beat the game
   {
-    gamePaused=true;
-    gameCompletedBanner();
+    gamePaused=true; // disable all player input
+    gameCompletedBanner(); // game completed
     --gameTextDelay;
     if(gameTextDelay<=0)
     {
-      screenID=74;
+      screenID=74; // moves to successful screen
     }
   }
   
-  drawGameExit();
-  drawCharacter();
-  if(!gamePaused)
+  drawGameExit(); // draw exit arrow
+  drawCharacter(); // draw character
+  if(!gamePaused) // no gravity if game paused
   {
-    if(characterX<20) characterX=20;
+    if(characterX<20) characterX=20; // make sure character can't go off screen
     characterY+=characterSpeedY;
-    if(characterY<260) characterSpeedY+=1;
+    if(characterY<260) characterSpeedY+=1; // gravitational acceleration
     else
-    {
-      characterSpeedY=0;
-      characterY=260;
+    { // hit ground
+      characterSpeedY=0; // no more speed
+      characterY=260; // character on ground
     }
   }
 }
 
-void gameFailBanner()
+void gameFailBanner() // fail banner for game
 {
   fill(50);
   rect(0,400,800,100);
-  fill(#DD0000);
+  fill(#DD0000); // red
   textFont(game_font,50);
   text("ESCAPE FAILED",220,460);
 }
 
-void gameCompletedBanner()
+void gameCompletedBanner() // successful banner for game
 {
   fill(50);
   rect(0,400,800,100);
-  fill(#00DD00);
+  fill(#00DD00); // green
   textFont(game_font,50);
   text("ESCAPE SUCCESSFUL",190,460);
 }
 
-void goodbye()
+void goodbye() // goodbye screen
 {
   background(50);
-  textFont(game_font,60);
+  textFont(game_font,40);
   fill(#1AA0D3);
-  text("See you next time!\nCreated by Peter Ye",100,200);
+  text("See you next time!\nCreated by Peter Ye",100,100);
+  
+  strokeWeight(20);
+  stroke(#C4BC28);
+  line(500,300,500,600); // spine of character
+  line(500,380,600,450);
+  line(500,380,400,360);
+  strokeWeight(18);
+  line(600,450,600,600);
+  line(400,360,400+cos(armAngle)*100,360+sin(armAngle)*100);
+  if(armAngle>25*PI/16) armAngleSpeed*=-1;
+  else if(armAngle<5*PI/4) armAngleSpeed*=-1;
+  armAngle+=armAngleSpeed;
+  
+  fill(#CBA779);
+  stroke(0);
+  strokeWeight(1);
+  ellipse(500,300,100,100); // head of character
+  fill(#EA8911);
+  arc(500,300,120,120,PI,2*PI,CHORD); // hat of character
+  
   ++exitWaves;
-  if(exitWaves>=120) exit(); // exit the entire program
+  if(exitWaves>=240) exit(); // exit the entire program
 }
 
-void setup()
+void setup() // loads font and sets screen size
 {
   size(800,500);
   game_font=loadFont("game_font.vlw");
 }
 
-void draw()
+void draw() // determines what screen to display
 {
   if(screenID==0) loadingBar();
   else if(screenID==1) introTime();
@@ -1163,7 +1187,7 @@ void draw()
   else if(screenID==8) goodbye();
 }
 
-void mouseClicked()
+void mouseClicked() // determines what mouse processing method to use
 {
   if(screenID==4) mainMenuMouse();
   else if(screenID==5) instructionsMouse();
@@ -1177,12 +1201,12 @@ void mouseClicked()
   else if(screenID==74) gameCompletedMouse();
 }
 
-void keyPressed()
+void keyPressed()  // determines what keyboard processing method to use
 {
   if(screenID==6) mazeOfLearningKey();
   else if(screenID==7)
   {
-    if(key=='w') gameWPressed=true;
+    if(key=='w') gameWPressed=true; // allows muliple keys to be held at once
     else if(key=='a') gameAPressed=true;
     else if(key=='d') gameDPressed=true;
   }
@@ -1192,7 +1216,7 @@ void keyReleased()
 {
   if(screenID==7)
   {
-    if(key=='w') gameWPressed=false;
+    if(key=='w') gameWPressed=false; // allows muliple keys to be held at once
     else if(key=='a') gameAPressed=false;
     else if(key=='d') gameDPressed=false;
   }
